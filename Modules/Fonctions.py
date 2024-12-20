@@ -40,9 +40,9 @@ def formaterPaquet(TypePaquet, Contenu):
         Paquet = f"Commande|{time.strftime('%H:%M:%S')}|{Contenu}"
     
     elif TypePaquet == "FileTransfer":
+
         file_name, file_size = Contenu.split("|")
         Paquet = f"FileTransfer|{time.strftime('%H:%M:%S')}|{file_name}|{file_size}"
-
 
     return Paquet
 

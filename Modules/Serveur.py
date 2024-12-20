@@ -329,6 +329,7 @@ def Démarrer(IP, Port, NombreClientsMax, MotDePasse):
                                             Envoi(messageFormaté, "Message", client)
                                     
                                     elif Type == "FileTransfer":
+
                                         file_name = MessageListe[2]
                                         file_size = int(MessageListe[3])
                                         

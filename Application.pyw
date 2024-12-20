@@ -740,7 +740,7 @@ def Réception():
                 #0 étant la longueur de ce message
 
             # Handling specific commands or data types
-            if MessageReçu.startswith("file:"):
+            elif MessageReçu.startswith("file:"):
                 # Extract the filename and file data from the message
                 _, FileName, FileContent = MessageReçu.split(":", 2)
 
