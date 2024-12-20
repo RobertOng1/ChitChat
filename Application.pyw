@@ -547,7 +547,7 @@ def Envoyer(ModeManuel = False, MessageManuel = None):
 
         if PremierArgument == "/stop" and ModeManuel == False and Rôle == "Hôte":
 
-            RéponseUser = tkinter.messagebox.askokcancel("Kripto","Do you really want to stop the server?")
+            RéponseUser = tkinter.messagebox.askokcancel("Chit Chat","Do you really want to stop the server?")
             stop = True
 
         elif PremierArgument == "/stop" and ModeManuel == False and Rôle != "Hôte":
@@ -1010,7 +1010,7 @@ def fermeture():
 
     """ Fonction appellée quand l'utilisateur veut fermer la fenêtre """
 
-    RéponseUser  = tkinter.messagebox.askokcancel("Kripto","Are you leaving already?")
+    RéponseUser  = tkinter.messagebox.askokcancel("Chit Chat","Are you leaving already?")
 
     if RéponseUser == True:
 
