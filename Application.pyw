@@ -12,7 +12,7 @@ import tkinter.font as tkFont
 from tkinter import messagebox
 from random import randint, choices
 from tkinter.scrolledtext import ScrolledText
-from Modules import ChiffrementRSA, Fonctions, Paramètres, Sauvegarde, Serveur
+from Modules import ChiffrementRSA, Fonctions, Paramètres, Sauvegarde, Serveur, Kripiti
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -684,7 +684,7 @@ def Réception():
         try: MessageReçu = ConnexionSocket.recv(32768)
         #Cette partie du code est dans un bloc "try, except" car "ConnexionSocket.setblocking(0)" a été défini sur False
         #Au lieu d'attendre un message, si rien n'est envoyé cela va générer une exception, ce qui permet un fonctionnement asynchrone.
-  
+
         except BlockingIOError:
         #Si aucun message n'a été envoyé, on ne fait rien et on attend pour préserver les ressources la machine
             time.sleep(0.1)
