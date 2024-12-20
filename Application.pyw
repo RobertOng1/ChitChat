@@ -12,7 +12,7 @@ import tkinter.font as tkFont
 from tkinter import messagebox
 from random import randint, choices
 from tkinter.scrolledtext import ScrolledText
-from Modules import ChiffrementRSA, Fonctions, LecteurSauvegarde, Paramètres, Sauvegarde, Serveur, Kripiti
+from Modules import ChiffrementRSA, Fonctions, Paramètres, Sauvegarde, Serveur
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1007,7 +1007,6 @@ fen.protocol("WM_DELETE_WINDOW", fermeture)
 BarreMenu = Menu(fen)
 BarreMenu.add_command(label="Menu", command= lambda: RetournerMenu(DepuisMenu = True))
 BarreMenu.add_command(label="Help", command=Help)
-BarreMenu.add_command(label="Backup", command=LecteurSauvegarde.LecteurSauvegarde)
 BarreMenu.add_command(label="Settings", command=Paramètres.InterfaceParamètres)
 fen.configure(menu=BarreMenu)
 
