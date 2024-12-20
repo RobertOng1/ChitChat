@@ -6,6 +6,7 @@ import tkinter
 import winsound
 import platform
 import threading
+import os
 from tkinter import *
 import tkinter.simpledialog
 import tkinter.font as tkFont
@@ -570,6 +571,22 @@ def Envoyer(ModeManuel = False, MessageManuel = None):
             tkinter.messagebox.showerror(title = "Permission Error", message = "You cannot use this command, you are not the host of the discussion")
             Permission = False
 
+        elif PremierArgument == "/ft":
+            if len(message.split()) < 2:
+                tkinter.messagebox.showerror(title="File Transfer Error", message="Please specify a file name after /ft.")
+            else:
+                file_name = message.split(maxsplit=1)[1]
+                try:
+                    with open(file_name, "rb") as file:
+                        file_content = file.read()
+                        file_metadata = f"FileTransfer|{file_name}|{len(file_content)}"
+                        ConnexionSocket.sendall(file_metadata.encode("utf-8"))
+                        ConnexionSocket.sendall(file_content)
+                        tkinter.messagebox.showinfo(title="File Transfer", message=f"File '{file_name}' sent successfully.")
+                except FileNotFoundError:
+                    tkinter.messagebox.showerror(title="File Transfer Error", message=f"File '{file_name}' not found.")
+
+
         if RéponseUser == True and Rôle == "Hôte" or ModeManuel == True or PremierArgument != "/stop" and Permission == True:
 
             message = Fonctions.formaterPaquet("Commande", message)
@@ -721,6 +738,34 @@ def Réception():
                 MessageReçu = ChiffrementRSA.déchiffrement(MessageReçu[1], CléPrivée, Module)
                 #On ne déchiffre que l'index 1 du message, qui est le messge en lui même
                 #0 étant la longueur de ce message
+
+            # Handling specific commands or data types
+            if MessageReçu.startswith("file:"):
+                # Extract the filename and file data from the message
+                _, FileName, FileContent = MessageReçu.split(":", 2)
+
+                # Decode the file content (it might be base64 encoded)
+                import base64
+                FileContent = base64.b64decode(FileContent)
+
+                # Save the file to a directory
+                with open(FileName, "wb") as File:
+                    File.write(FileContent)
+
+                tkinter.messagebox.showinfo(
+                    title="File Received",
+                    message=f"A file named '{FileName}' has been successfully received and saved."
+                )
+                NotifSilencieuse = True  # Avoid showing additional notifications for this
+
+            elif MessageReçu == "ban":
+                tkinter.messagebox.showinfo(
+                    title="You have been banned",
+                    message="You have been banned from the server, you can no longer login again."
+                )
+                ConnexionEnCours = False
+                RetournerMenu(ConversationEnCours=True)
+                NotifSilencieuse = True
 
                 if MessageReçu == "ban":
 
@@ -1007,7 +1052,7 @@ fen.protocol("WM_DELETE_WINDOW", fermeture)
 BarreMenu = Menu(fen)
 BarreMenu.add_command(label="Menu", command= lambda: RetournerMenu(DepuisMenu = True))
 BarreMenu.add_command(label="Help", command=Help)
-BarreMenu.add_command(label="Backup", command=LecteurSauvegarde.LecteurSauvegarde)
+# BarreMenu.add_command(label="Backup", command=LecteurSauvegarde.LecteurSauvegarde)
 BarreMenu.add_command(label="Settings", command=Paramètres.InterfaceParamètres)
 fen.configure(menu=BarreMenu)
 

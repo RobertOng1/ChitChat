@@ -327,6 +327,31 @@ def Démarrer(IP, Port, NombreClientsMax, MotDePasse):
                                             messageFormaté = f"[{HeureMessage}] {Nom[client]} → {Contenu}"
                                             print(messageFormaté)
                                             Envoi(messageFormaté, "Message", client)
+                                    
+                                    elif Type == "FileTransfer":
+                                        file_name = MessageListe[2]
+                                        file_size = int(MessageListe[3])
+                                        
+                                        # Notify the server about the incoming file
+                                        Annonce = f"[{HeureCommande}] {Nom[client]} is sending file '{file_name}' ({file_size} bytes)"
+                                        print(Annonce)
+                                        Envoi(Annonce, "Annonce")
+                                        
+                                        # Receive file content
+                                        received_size = 0
+                                        file_content = b""
+                                        while received_size < file_size:
+                                            chunk = client.recv(4096)  # Adjust chunk size if needed
+                                            file_content += chunk
+                                            received_size += len(chunk)
+                                        
+                                        # Save the file
+                                        with open(f"Received_{file_name}", "wb") as file:
+                                            file.write(file_content)
+                                        
+                                        print(f"File '{file_name}' received and saved as 'Received_{file_name}'.")
+                                        Envoi(f"File '{file_name}' received successfully.", "Message", client)
+
 
                                     elif Type == "Commande":
 
