@@ -112,6 +112,11 @@ IV. Barre d'application.........................................................
 
         2. Définition de CouperSon()..................................................837
 
+    E. Définition de Contact()........................................................847
+
+        Fonction qui permet à l'utilisateur de reporter un bug via les Issues GitHub 
+        avec notre bot "Kripiti"
+
 V. Définition de fermeture()..........................................................900
     
     Fonctions appelée quand l'utilisateur ferme la fenêtre
@@ -780,7 +785,7 @@ def Réception():
 
                 if FenêtreALeFocus == False and NotifSilencieuse == False and Paramètres.DicoParamètres["Notification"] == "Activée":
 
-                    Fonctions.AfficherNotification("Chit Chat", MessageReçu)
+                    Fonctions.AfficherNotification("Kripto", MessageReçu)
 
                 if SonActivé == True and NotifSilencieuse == False:
 
@@ -948,6 +953,59 @@ def CouperSon():
     #On supprime la commande à l'index 2 du menu pour y ajouter la commande ActiverSon à la même position
 
 
+def Contact():
+
+    """ Cette fonction affiches les informations du serveur dans une fenêtre en top level"""
+
+    def EnvoiAPI():
+
+        TitreIssue = InputObjet.get()
+        Message = InputMessage.get("1.0", tkinter.END)
+        Plateforme = platform.system() + " " + platform.release() + " " + platform.version()
+
+        if Kripiti.CréerUneIssue(TitreIssue, Message, Plateforme) == True:
+            tkinter.messagebox.showinfo(
+
+                title = "Succes !", 
+                message = "Your bug has been successfully reported to our teams. Thank you for your contribution !"
+            )
+
+            fenContact.destroy()
+
+        else:
+            tkinter.messagebox.showerror(
+                title = "Opss...",
+                message = "Unable to report the bug at the moment. Please try again."
+            )
+
+
+    fenContact = Toplevel()
+    fenContact.geometry("300x280")
+    fenContact.configure(bg="grey")
+    fenContact.resizable(width=False, height=False)
+    fenContact.iconbitmap(bitmap="Médias/information.ico")
+    fenContact.title("Contact")
+
+    #Label d'objet
+    Label(fenContact, text="What's the problem?", bg="Grey", font=PoliceTitre).pack(pady=10)
+
+    InputObjet = Entry(fenContact, width = 50, bg="White", font=PoliceSousTitre)
+    InputObjet.pack(padx=20)
+
+    #Label de message
+    Label(fenContact, text="A little more detail?", bg="Grey", font=PoliceTitre).pack(pady=10)
+
+    InputMessage = ScrolledText(fenContact, width = 50, height = 5, bg="White", font=PoliceSousTitre)
+    InputMessage.pack(padx=20)
+
+    Button(fenContact, text="Send your message", command=EnvoiAPI).pack(pady=20, side=BOTTOM)
+
+    fenContact.focus_force()
+    #On affiche la fenêtre au premier plan
+
+    fenContact.mainloop()
+
+
 def fermeture():
 
     """ Fonction appellée quand l'utilisateur veut fermer la fenêtre """
@@ -1008,6 +1066,7 @@ BarreMenu = Menu(fen)
 BarreMenu.add_command(label="Menu", command= lambda: RetournerMenu(DepuisMenu = True))
 BarreMenu.add_command(label="Help", command=Help)
 BarreMenu.add_command(label="Settings", command=Paramètres.InterfaceParamètres)
+BarreMenu.add_command(label="Contact", command=Contact)
 fen.configure(menu=BarreMenu)
 
 PoliceTitreBienvenue = tkFont.Font(family="Verdanna",size=16,weight="bold")
